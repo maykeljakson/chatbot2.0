@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 10px;
+        }
+
+        #chat-container {
+            width: 100%;
+            max-width: 400px;
+            margin: auto;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 10px;
+            height: 60vh;
+            max-height: 400px;
+            overflow-y: scroll;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .user-message {
+            background-color: #dcf8c6;
+            align-self: flex-end;
+        }
+
+        .bot-message {
+            background-color: #eee;
+            align-self: flex-start;
+        }
+
+        #input-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        #user-input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            margin-right: 5px;
+        }
+
+        #send-button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #5cb85c;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        #send-button:hover {
+            background-color: #4cae4c;
+        }
+
+        @media (max-width: 600px) {
+            #chat-container {
+                height: 50vh;
+            }
+
+            #input-container {
+                flex-direction: column;
+            }
+
+            #user-input {
+                margin-right: 0;
+                margin-bottom: 10px;
+                width: 100%;
+            }
+
+            #send-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="chat-container"></div>
+<div id="input-container">
+    <input type="text" id="user-input" placeholder="Type your message...">
+    <button id="send-button" onclick="sendMessage()">Send</button>
+</div>
+
+<script>
+    function sendMessage() {
+        var userInput = document.getElementById('user-input').value;
+        if (userInput.trim() === "") return;
+
+        appendMessage('User', userInput);
+        
+        // Simulating bot response
+        setTimeout(function() {
+            var botResponse = generateBotResponse(userInput);
+            appendMessage('Bot', botResponse);
+        }, 500);
+
+        // Clear user input
+        document.getElementById('user-input').value = '';
+    }
+
+    function appendMessage(sender, message) {
+        var chatContainer = document.getElementById('chat-container');
+        var messageElement = document.createElement('div');
+        messageElement.classList.add('message');
+
+        if (sender === 'User') {
+            messageElement.classList.add('user-message');
+        } else {
+            messageElement.classList.add('bot-message');
+        }
+
+        var timestamp = new Date().toLocaleTimeString();
+        messageElement.innerHTML = `<strong>${sender}:</strong> ${message} <br><small>${timestamp}</small>`;
+        chatContainer.appendChild(messageElement);
+
+        // Scroll to the bottom to show the latest message
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function generateBotResponse(userInput) {
+        var response = "I don't understand that. Can you please ask something else?";
+
+        var lowerCaseInput = userInput.toLowerCase();
+        
+        if (lowerCaseInput.includes('hello') || lowerCaseInput.includes('hi')) {
+            response = 'Hello! How can I help you today?';
+        } else if (lowerCaseInput.includes('how are you')) {
+            response = 'I am just a bot, but I am here to help you!';
+        } else if (lowerCaseInput.includes('name')) {
+            response = 'I am your friendly chatbot!';
+        } else if (lowerCaseInput.includes('age')) {
+            response = 'I am timeless!';
+        } else if (lowerCaseInput.includes('weather')) {
+            response = 'I am not sure, but you can check a weather website for that!';
+        }
+
+        return response;
+    }
+
+    // Send message when pressing Enter
+    document.getElementById('user-input').addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            sendMessage();
+        }
+    });
+</script>
+
+</body>
+</html>
+
